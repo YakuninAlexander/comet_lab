@@ -57,10 +57,12 @@ def pos(a, v0):
         val_y.append(r[3])
     return xpositions, ypositions, val_x, val_y
 
-x_pos, y_pos, val_x, val_y = pos(30, 100.2)
+x_pos, y_pos, val_x, val_y = pos(30, 200.0)
 fig = plt.figure()
 graf = fig.add_subplot(111)
 graf.plot(x_pos, y_pos)
+c = plt.Circle((0,0), 1, color = 'yellow')
+plt.gca ().add_artist (c)
 plt.show()
 
 
