@@ -8,12 +8,8 @@ h = 0.001
 time=np.arange(0,10,h)
 
 def func(t, r):
-    x = r[0]
-    z = r[1]
-    y = r[2]
-    z1 = r[3]
-
-    R = np.sqrt((x**2)+(y**2))
+    x, z, y, z1 = r
+    R = np.hypot(x,y)
     fx = z
     fz = -(G*M)*(x/R**3)
     fy = z1
@@ -30,17 +26,13 @@ def r_init(a, v0):
 def runge_kutt(t, r):
     k1 = func(t, r)
     prom = [None] * 4
-    for i in range(len(r)):
-        prom[i] = r[i] + k1[i]*(h/2.0)
+    prom = r + k1*(h/2.0)
     k2 = func(t + h/2.0, prom)
-    for i in range(len(r)):
-        prom[i] = r[i] + k2[i]*(h/2.0)
+    prom = r + k2*(h/2.0)
     k3 = func(t+h/2.0, prom)
-    for i in range(len(r)):
-        prom[i] = r[i] + k3[i]*h
+    prom = r + k3*h
     k4 = func(t+h, prom)
-    for i in range(len(r)):
-        r[i] = r[i] + (h/6.0)*(k1[i] + 2.0*k2[i] + 2.0*k3[i] + k4[i])
+    r+=(h/6.0)*(k1 + 2.0*k2 + 2.0*k3 + k4)
     return r
 
 def pos(a, v0):
@@ -57,7 +49,7 @@ def pos(a, v0):
         val_y.append(r[3])
     return xpositions, ypositions, val_x, val_y
 
-x_pos, y_pos, val_x, val_y = pos(30, 200.0)
+x_pos, y_pos, val_x, val_y = pos(30, 129.2)
 fig = plt.figure()
 graf = fig.add_subplot(111)
 graf.plot(x_pos, y_pos)
