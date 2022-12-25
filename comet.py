@@ -40,35 +40,46 @@ def runge_kutt(t, r): # Метод Рунге-Кутта 4 порядка
 
     return r
 
-def getCometPosition(angle, v0):
+def euler(t, r): #метод эйлера
+    r+=func(t, r)*h
+    return r
+
+def getCometPosition(angle, v0, choice):
     xpositions = []
     ypositions = []
 
-    r = r_init(angle, v0)
+    r = r_init(angle, v0) #Начальное условие
 
     for t in time:
-        r = runge_kutt(t, r)
+        if(choice):
+            r = runge_kutt(t, r)
+        else:
+            r = euler(t, r)
         xpositions.append(r[0]) # Координата кометы х
         ypositions.append(r[2]) # Координата кометы у
 
     return xpositions, ypositions
 
+
 def UI():
     while True:
-        print('1. Закрутить орбиту.')
-        print('2. Определить орбиту кометы для заданной скорости.')
+        print('1. Получить орбиту кометы для условия задачи.')
+        print('2. Получить орбиту кометы для введенной скорости.')
         ans = (int)(input('3. Выход.\n'))
         if (ans == 1):
-            x_pos, y_pos = getCometPosition(30, 2000.0)
+            x_pos, y_pos = getCometPosition(30, 2000.0, True) #Рунге-Кутт
+            x_e_pos, y_e_pos = getCometPosition(30, 2000.0, False) #Эйлер
         elif (ans == 2):
             v0 = (float)(input('Введите начальную скорость кометы: '))
-            x_pos, y_pos = getCometPosition(30, v0)
+            x_pos, y_pos = getCometPosition(30, v0, True) #Рунге-Кутт
+            x_e_pos, y_e_pos = getCometPosition(30, v0, False) #Эйлер
         else:
             return
 
         fig = plt.figure()
         graf = fig.add_subplot(111)
         graf.plot(x_pos, y_pos)
+        graf.plot(x_e_pos, y_e_pos)
 
         c = plt.Circle((0,0), 0.5 * (10 ** 12), color = 'red')
         plt.gca().add_artist(c)
